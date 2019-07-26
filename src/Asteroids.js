@@ -2,13 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { getAsteroids } from "./store/asteroidsReducer";
 import {
-  XYPlot,
+  ScatterChart,
+  Scatter,
   XAxis,
   YAxis,
-  VerticalGridLines,
-  HorizontalGridLines,
-  MarkSeries
-} from "react-vis";
+  ZAxis,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
 
 class Asteroids extends React.Component {
   componentDidMount() {
@@ -17,22 +18,45 @@ class Asteroids extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{ minHeight: "350px" }}>
         Asteroids
         {this.props.asteroids.length ? (
-          <XYPlot width={window.innerWidth} height={window.innerHeight}>
-            <VerticalGridLines style={{ stroke: "white" }} />
-            <HorizontalGridLines style={{ stroke: "white" }} />
-            <XAxis />
-            <YAxis />
-            <MarkSeries
-              className="mark-series-example"
-              strokeWidth={2}
-              color={"ff0000"}
-              opacity="0.8"
-              data={this.props.asteroids.length ? this.props.asteroids : []}
+          <ScatterChart
+            width={800}
+            height={250}
+            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+            <XAxis
+              type="category"
+              dataKey="size"
+              interval={0}
+              tick={{ fontSize: 0 }}
+              tickLine={{ transform: "translate(0, -6)" }}
             />
-          </XYPlot>
+            <YAxis
+              dataKey="index"
+              // name="sunday"
+              // height={1}
+              padding={{ top: 125 }}
+              domain={[0, 1]}
+              width={80}
+              tick={false}
+              tickLine={false}
+              axisLine={false}
+              label={{ value: "Asteroids", position: "insideRight" }}
+            />
+            <ZAxis
+              type="number"
+              dataKey="size"
+              // domain={domain}
+              range={[100, 10000]}
+            />
+            <Tooltip
+              cursor={{ strokeDasharray: "3 3" }}
+              wrapperStyle={{ zIndex: 100 }}
+              content={this.renderTooltip}
+            />
+            <Scatter data={this.props.asteroids} fill="#8884d8" />
+          </ScatterChart>
         ) : (
           []
         )}
